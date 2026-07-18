@@ -14,10 +14,10 @@ def get_conexao():
 
 @app.route("/clientes", methods=["GET"])
 def buscar_clientes():
-    mydb = get_conexao()
-    cur = mydb.cursor()
-    cur.execute("SELECT cli_codigo, cli_nome, cli_email, cli_criado_em FROM clientes")
-    tb_clientes = cur.fetchall()
+    meubanco = get_conexao()
+    cursor = meubanco.cursor() #objeto usado para executar comandos SQL
+    cursor.execute("SELECT cli_codigo, cli_nome, cli_email, cli_criado_em FROM clientes")
+    tb_clientes = cursor.fetchall()
     clientes = list()
 
     for cliente in tb_clientes:
@@ -29,7 +29,6 @@ def buscar_clientes():
             }
         )
 
-
     return make_response(
         jsonify(
             dados=clientes,
@@ -39,11 +38,11 @@ def buscar_clientes():
 @app.route("/clientes", methods=["POST"])
 def adicionar_cliente():
     cliente = request.json
-    mydb = get_conexao()
-    mycursor = mydb.cursor()
+    meubanco = get_conexao()
+    cursor = meubanco.cursor()
     sql = "INSERT INTO clientes (cli_nome, cli_email) VALUES (%s, %s)"
-    mycursor.execute(sql, (cliente['nome'], cliente['email']))
-    mydb.commit()
+    cursor.execute(sql, (cliente['nome'], cliente['email']))
+    meubanco.commit()
 
     return make_response(
         jsonify(

@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, request
 
 app = Flask(__name__)
 
@@ -34,6 +34,21 @@ def buscar_clientes():
         jsonify(
             dados=clientes,
             mensagem = "lista de clientes.",
+        )
+    )
+@app.route("/clientes", methods=["POST"])
+def adicionar_cliente():
+    cliente = request.json
+    mydb = get_conexao()
+    mycursor = mydb.cursor()
+    sql = "INSERT INTO clientes (cli_nome, cli_email) VALUES (%s, %s)"
+    mycursor.execute(sql, (cliente['nome'], cliente['email']))
+    mydb.commit()
+
+    return make_response(
+        jsonify(
+            mensagem = "Cliente adicionado com sucesso.",
+            cliente = cliente
         )
     )
 

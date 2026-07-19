@@ -51,5 +51,18 @@ def adicionar_cliente():
         )
     )
 
+@app.route("/clientes/<id>", methods=["DELETE"])
+def excluir_cliente(id):
+    meubanco = get_conexao()
+    cursor = meubanco.cursor()
+    sql = "DELETE FROM clientes WHERE cli_codigo = %s"
+    cursor.execute(sql, (id,))
+    meubanco.commit()
+    return make_response(
+        jsonify(
+            mensagem = "Cliente excluido com sucesso.",
+        )
+    )
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -64,5 +64,22 @@ def excluir_cliente(id):
         )
     )
 
+@app.route("/clientes/<int:id>", methods=["PUT"])
+def atualizar_cliente(id):
+    cliente = request.json
+    meubanco = get_conexao()
+    cursor = meubanco.cursor()
+
+    sql = "UPDATE clientes SET cli_nome = %s, cli_email = %s WHERE cli_codigo = %s"
+    valores = (cliente['nome'], cliente['email'], id)
+
+    cursor.execute(sql, valores)
+    meubanco.commit()
+    return make_response(
+        jsonify(
+            mensagem = "Cliente atualizado com sucesso!"
+        )
+    )
+
 if __name__ == "__main__":
     app.run(debug=True)
